@@ -1,33 +1,34 @@
+require('dotenv').config();
 const HDWalletProvider = require('@truffle/hdwallet-provider');
-const mnemonic = "orange banana apple pear peach nut";
 
 module.exports = {
-  // See <http://truffleframework.com/docs/advanced/configuration>
-  // for more about customizing your Truffle configuration!
   networks: {
-    "live": {
+    "prod": {
+      provider: () => new HDWalletProvider(process.env.ADMIN_WALLET_PRIVKEY, `https://mainnet.infura.io/v3/${process.env.INFURA_KEY}`),
       network_id: 1,
-      host: "127.0.0.1",
-      port: 8546,
+      confirmations: 2,
+      timeoutBlocks: 200,
+      skipDryRun: true,
     },
-    development: {
+    ganache: {
       host: "127.0.0.1",
-      port: 8545,
-      network_id: "*" // Match any network id
-    },
-    develop: {
-      port: 8545
+      port: 7545,
+      network_id: "*"
     },
     rinkeby: {
-      provider: function() {
-        return new HDWalletProvider(mnemonic, "https://rinkeby.infura.io/v3/2831591f10d1473a8bd806ed78bfcbb2")
-      },
-      network_id: 3
+      provider: () => new HDWalletProvider(process.env.ADMIN_WALLET_PRIVKEY, `https://rinkeby.infura.io/v3/${process.env.INFURA_KEY}`),
+      network_id: 4,
+      gas: 5500000,
+      confirmations: 2,
+      timeoutBlocks: 200,
+      skipDryRun: true
     },
     moonbase: {
-      url: "https://moonbeam-alpha.api.onfinality.io/rpc?apikey=1647bb4e-7bcf-42c9-bfb7-b1a569577841",
-      accounts: [process.env.ADMIN_WALLET_PRIVATE_KEY],
-      chainId: 1287,
+      provider: () => new HDWalletProvider(process.env.ADMIN_WALLET_PRIVKEY, process.env.MOONBASE),
+      network_id: 1287,
+      confirmations: 2,
+      timeoutBlocks: 200,
+      skipDryRun: true,
     },
   }
 };
